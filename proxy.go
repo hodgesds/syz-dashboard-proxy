@@ -141,6 +141,7 @@ func (p *proxy) uploadBuild(c *gin.Context, client, key string) {
 	for _, dash := range p.dashes {
 		err := dash.UploadBuild(&build)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -176,6 +177,7 @@ func (p *proxy) builderPoll(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.BuilderPoll(pollReq.Manager)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -211,6 +213,7 @@ func (p *proxy) jobPoll(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.JobPoll(&jobPollReq)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -244,6 +247,7 @@ func (p *proxy) jobDone(c *gin.Context, client, key string) {
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
 		err := dash.JobDone(&jobDoneReq)
+		p.dashMu.RUnlock()
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
@@ -278,6 +282,7 @@ func (p *proxy) reportBuildError(c *gin.Context, client, key string) {
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
 		err := dash.ReportBuildError(&buildErrReq)
+		p.dashMu.RUnlock()
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
@@ -292,6 +297,7 @@ func (p *proxy) commitPoll(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.CommitPoll()
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -326,6 +332,7 @@ func (p *proxy) uploadCommits(c *gin.Context, client, key string) {
 	for _, dash := range p.dashes {
 		err := dash.UploadCommits(req.Commits)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -361,6 +368,7 @@ func (p *proxy) reportCrash(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.ReportCrash(&req)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -396,6 +404,7 @@ func (p *proxy) needRepro(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.NeedRepro(&req)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -430,6 +439,7 @@ func (p *proxy) reportFailedRepro(c *gin.Context, client, key string) {
 	for _, dash := range p.dashes {
 		err := dash.ReportFailedRepro(&req)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -495,6 +505,7 @@ func (p *proxy) reportingPollBugs(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.ReportingPollBugs(req.Type)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -530,6 +541,7 @@ func (p *proxy) reportingPollNotifs(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.ReportingPollNotifications(req.Type)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -565,6 +577,7 @@ func (p *proxy) reportingPollClosed(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.ReportingPollClosed(req.IDs)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -600,6 +613,7 @@ func (p *proxy) reportingUpdate(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.ReportingUpdate(&req)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -643,6 +657,7 @@ func (p *proxy) managerStats(c *gin.Context, client, key string) {
 	for _, dash := range p.dashes {
 		err := dash.UploadManagerStats(&req)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -656,6 +671,7 @@ func (p *proxy) bugList(c *gin.Context, client, key string) {
 		// TODO: How to handle responses?
 		_, err := dash.BugList()
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -692,6 +708,7 @@ func (p *proxy) loadBug(c *gin.Context, client, key string) {
 		// TODO: handle this.
 		_, err := dash.LoadBug(req.ID)
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
