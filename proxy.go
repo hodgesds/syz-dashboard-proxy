@@ -174,7 +174,6 @@ func (p *proxy) builderPoll(c *gin.Context, client, key string) {
 
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.BuilderPoll(pollReq.Manager)
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -210,7 +209,6 @@ func (p *proxy) jobPoll(c *gin.Context, client, key string) {
 
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.JobPoll(&jobPollReq)
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -247,8 +245,8 @@ func (p *proxy) jobDone(c *gin.Context, client, key string) {
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
 		err := dash.JobDone(&jobDoneReq)
-		p.dashMu.RUnlock()
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -282,8 +280,8 @@ func (p *proxy) reportBuildError(c *gin.Context, client, key string) {
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
 		err := dash.ReportBuildError(&buildErrReq)
-		p.dashMu.RUnlock()
 		if err != nil {
+			p.dashMu.RUnlock()
 			c.JSON(http.StatusBadRequest, gin.H{"error": errUnknownMethod.Error()})
 			return
 		}
@@ -294,7 +292,6 @@ func (p *proxy) reportBuildError(c *gin.Context, client, key string) {
 func (p *proxy) commitPoll(c *gin.Context, client, key string) {
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.CommitPoll()
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -365,7 +362,6 @@ func (p *proxy) reportCrash(c *gin.Context, client, key string) {
 
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.ReportCrash(&req)
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -401,7 +397,6 @@ func (p *proxy) needRepro(c *gin.Context, client, key string) {
 
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.NeedRepro(&req)
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -502,7 +497,6 @@ func (p *proxy) reportingPollBugs(c *gin.Context, client, key string) {
 
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.ReportingPollBugs(req.Type)
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -538,7 +532,6 @@ func (p *proxy) reportingPollNotifs(c *gin.Context, client, key string) {
 
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.ReportingPollNotifications(req.Type)
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -574,7 +567,6 @@ func (p *proxy) reportingPollClosed(c *gin.Context, client, key string) {
 
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.ReportingPollClosed(req.IDs)
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -610,7 +602,6 @@ func (p *proxy) reportingUpdate(c *gin.Context, client, key string) {
 
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.ReportingUpdate(&req)
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -668,7 +659,6 @@ func (p *proxy) managerStats(c *gin.Context, client, key string) {
 func (p *proxy) bugList(c *gin.Context, client, key string) {
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: How to handle responses?
 		_, err := dash.BugList()
 		if err != nil {
 			p.dashMu.RUnlock()
@@ -705,7 +695,6 @@ func (p *proxy) loadBug(c *gin.Context, client, key string) {
 
 	p.dashMu.RLock()
 	for _, dash := range p.dashes {
-		// TODO: handle this.
 		_, err := dash.LoadBug(req.ID)
 		if err != nil {
 			p.dashMu.RUnlock()
